@@ -1,4 +1,4 @@
-require_relative "./lib/game_controller"
+require_relative './lib/game_controller'
 
-game = GameController.new()
-game.play()
+game = GameController.new
+game.play
