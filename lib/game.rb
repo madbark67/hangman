@@ -1,7 +1,7 @@
 require_relative 'dictionary_loader'
 
 class Game
-  attr_accessor :secret_word, :letter_array, :guess_array, :turns, :remaining_letters, :incorrect_letters
+  attr_accessor :secret_word, :letter_array, :guess_array, :remaining_guesses, :remaining_letters, :incorrect_letters
 
   def initialize
     @dictionary_loader = DictionaryLoader.new('lib/google-10000-english-no-swears.txt')
@@ -11,22 +11,24 @@ class Game
     @guess_array = Array.new(@secret_word.length, '_')
     @remaining_letters = ('a'..'z').to_a
     @incorrect_letters = []
-    @turns = 0
+    @remaining_guesses = 7
   end
 
   def set_secret
     self.secret_word = @dictionary_loader.pick_word
   end
 
-  def take_turn
-    self.turns = turns + 1
+  def remove_guess_count
+    self.remaining_guesses = remaining_guesses - 1
   end
 
   def process_guess(guess)
+    return if @guess_array.include?(guess) || @incorrect_letters.include?(guess)
+
     remaining_letters.delete(guess)
     unless letter_array.include?(guess)
       incorrect_letters << guess
-      take_turn
+      remove_guess_count
       return
     end
     letter_array.each_with_index do |letter, index|
