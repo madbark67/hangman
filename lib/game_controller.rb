@@ -8,8 +8,40 @@ class GameController
   end
 
   def play
+    start_choice = @player.initial_prompt
+    case start_choice
+    when '1'
+      puts ''
+    when '2'
+      fls = Dir.entries('saves/').select { |f| f.end_with?('.yaml') }
+      saves = fls.map.with_index(1) do |save, index|
+        "[#{index}] #{save}"
+      end
+      puts ''
+      puts 'Saves:'
+      puts saves
+      puts ''
+      puts 'What is the number of the save you want to load?'
+      save_number = gets.chomp.to_i
+      @game.load_game(fls[save_number - 1])
+      puts 'Game loaded!'
+      puts ''
+    end
+
     while @game.remaining_guesses != 0 && !@game.win?
-      @player.take_input
+      game_choice = @player.take_input
+
+      case game_choice
+      when '1'
+        puts ''
+      when '2'
+        puts 'What would you like to name your save?'
+        @game.save_game(gets.chomp)
+        puts 'Game successfully saved! Exiting...'
+        exit
+      end
+
+      @player.take_guess
       # p @game.letter_array
       @game.process_guess(@player.guess)
       @player.guess = ''
@@ -23,6 +55,7 @@ class GameController
       puts 'Incorrect letters:'
       puts @game.incorrect_letters.join(' ')
       puts '==========================================================================='
+      puts ''
 
     end
 

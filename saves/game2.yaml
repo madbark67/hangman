@@ -1,0 +1,35 @@
+---
+secret_word: msgstr
+remaining_guesses: 2
+incorrect_letters:
+- a
+- e
+- u
+- o
+- i
+remaining_letters:
+- b
+- c
+- d
+- f
+- g
+- h
+- j
+- k
+- l
+- m
+- "n"
+- p
+- q
+- v
+- w
+- x
+- "y"
+- z
+guess_array:
+- _
+- s
+- _
+- s
+- t
+- r

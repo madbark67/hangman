@@ -1,4 +1,5 @@
 require_relative 'dictionary_loader'
+require 'yaml'
 
 class Game
   attr_accessor :secret_word, :letter_array, :guess_array, :remaining_guesses, :remaining_letters, :incorrect_letters
@@ -12,6 +13,42 @@ class Game
     @remaining_letters = ('a'..'z').to_a
     @incorrect_letters = []
     @remaining_guesses = 7
+  end
+
+  def save_game(save_name)
+    save = {
+      'secret_word' => secret_word,
+      'remaining_guesses' => remaining_guesses,
+      'incorrect_letters' => incorrect_letters,
+      'remaining_letters' => remaining_letters,
+      'guess_array' => guess_array
+    }
+    serialized_object = YAML.dump(save)
+
+    File.write("saves/#{save_name}.yaml", serialized_object)
+  end
+
+  def load_game(file_name)
+    serialized_object = File.read("saves/#{file_name}")
+    save = YAML.load(serialized_object)
+    self.secret_word = save['secret_word']
+    self.letter_array = secret_word.split('')
+    self.remaining_guesses = save['remaining_guesses']
+    self.incorrect_letters = save['incorrect_letters']
+    self.remaining_letters = save['remaining_letters']
+    self.guess_array = save['guess_array']
+
+    puts '==========================================================================='
+    puts "You have #{remaining_guesses} guesses remaining"
+    display_guess
+    puts
+    puts 'Remaining letters:'
+    puts remaining_letters.join(' ')
+    puts
+    puts 'Incorrect letters:'
+    puts incorrect_letters.join(' ')
+    puts '==========================================================================='
+    puts ''
   end
 
   def set_secret
